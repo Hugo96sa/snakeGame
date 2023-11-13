@@ -1,17 +1,17 @@
 package org.example;
 
 public class StateDirection {
-    char direction;
+    Direction direction;
 
-    public StateDirection(char direction) {
+    public StateDirection(Direction direction) {
         this.direction = direction;
     }
 
-    public char getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 
-    public void setDirection(char letter) {
-        direction = letter;
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 }

@@ -21,11 +21,10 @@ public class GamePanel extends JPanel implements ActionListener {
     boolean running;
     Timer timer;
     Random random;
-    boolean aux = false;
 
     GamePanel() {
         random = new Random();
-        stateDirection = new StateDirection('R');
+        stateDirection = new StateDirection(Direction.RIGHT);
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.DARK_GRAY);
         this.setFocusable(true);
@@ -38,6 +37,16 @@ public class GamePanel extends JPanel implements ActionListener {
         running = true;
         timer = new Timer(DELAY, this);
         timer.start();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (running) {
+            move();
+            checkCollisions();
+            checkApple();
+        }
+        repaint();
     }
 
     public void addApple() {
@@ -56,16 +65,6 @@ public class GamePanel extends JPanel implements ActionListener {
         } while (breaker);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (running) {
-            move();
-            checkApple();
-            checkCollisions();
-        }
-        repaint();
-    }
-
     public void move() {
         for (int i = bodyLength; i > 0; i--) {
             snake[0][i] = snake[0][i - 1];
@@ -73,19 +72,10 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
         switch (stateDirection.getDirection()) {
-            case 'U' -> snake[1][0] = snake[1][0] - UNIT_SIZE;
-            case 'R' -> snake[0][0] = snake[0][0] + UNIT_SIZE;
-            case 'D' -> snake[1][0] = snake[1][0] + UNIT_SIZE;
-            case 'L' -> snake[0][0] = snake[0][0] - UNIT_SIZE;
-        }
-    }
-
-    public void checkApple() {
-        if ((snake[0][0] == apple[0]) && (snake[1][0] == apple[1])) {
-            System.out.println("Apple!");
-            bodyLength++;
-            applesEaten++;
-            addApple();
+            case UP -> snake[1][0] = snake[1][0] - UNIT_SIZE;
+            case RIGHT -> snake[0][0] = snake[0][0] + UNIT_SIZE;
+            case DOWN -> snake[1][0] = snake[1][0] + UNIT_SIZE;
+            case LEFT -> snake[0][0] = snake[0][0] - UNIT_SIZE;
         }
     }
 
@@ -106,6 +96,15 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
+    public void checkApple() {
+        if ((snake[0][0] == apple[0]) && (snake[1][0] == apple[1])) {
+            System.out.println("Apple!");
+            bodyLength++;
+            addApple();
+            applesEaten++;
+        }
+    }
+
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
@@ -123,7 +122,7 @@ public class GamePanel extends JPanel implements ActionListener {
             }
 
             // Apple
-            g.setColor(new Color(185, 90, 45));
+            g.setColor(new Color(190, 55, 55));
             g.fillOval(apple[0], apple[1], UNIT_SIZE, UNIT_SIZE);
 
             // Snake
